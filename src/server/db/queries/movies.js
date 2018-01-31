@@ -1,28 +1,28 @@
-const knex = require("../connection");
+const knex = require('../connection');
 
-const getAllMovies = () => knex("movies").select("*");
+const getAllMovies = () => knex('movies').select('*');
 
-const getSingleMovie = id =>
-  knex("movies")
-    .select("*")
+const getSingleMovie = (id) =>
+  knex('movies')
+    .select('*')
     .where({ id: parseInt(id) });
 
-const addMovie = movie =>
-  knex("movies")
+const addMovie = (movie) =>
+  knex('movies')
     .insert(movie)
-    .returning("*");
+    .returning('*');
 
 const updateMovie = (id, movie) =>
-  knex("movies")
+  knex('movies')
     .update(movie)
     .where({ id: parseInt(id) })
-    .returning("*");
+    .returning('*');
 
-const deleteMovie = id =>
-  knex("movies")
+const deleteMovie = (id) =>
+  knex('movies')
     .del()
     .where({ id: parseInt(id) })
-    .returning("*");
+    .returning('*');
 
 module.exports = {
   getAllMovies,
