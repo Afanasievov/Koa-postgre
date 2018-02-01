@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "knex": "knex",
-    "mocha": "mocha",
+    "mocha": "mocha --exit",
     "start": "node ./src/server/index.js",
     "test": "npm run mocha"
   },
@@ -14,7 +14,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
-      "pre-push": "lint-staged"
+      "pre-push": "lint-staged && npm test"
     }
   },
   "keywords": [],
