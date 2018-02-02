@@ -1,19 +1,20 @@
 const Router = require('koa-router');
 const codes = require('http-status-codes');
 const queries = require('../db/queries/movies');
+const logger = require('../services/logger');
 
 const router = new Router();
 const BASE_URL = '/api/v1/movies';
-
 router.get(BASE_URL, async (ctx) => {
   try {
     const movies = await queries.getAllMovies();
+
     ctx.body = {
       status: 'success',
       data: movies
     };
   } catch (err) {
-    console.log(err);
+    logger.error(err.message || err.Message || err);
   }
 });
 
