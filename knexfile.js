@@ -1,35 +1,36 @@
-const path = require("path");
-const BASE_PATH = path.join(__dirname, "src", "server", "db");
+const path = require('path');
+
+const BASE_PATH = path.join(__dirname, 'src', 'server', 'db');
 
 module.exports = {
   test: {
-    client: "pg",
+    client: 'pg',
     connection: {
-      host: "127.0.0.1",
-      user: "oleksandr",
-      password: "postgres",
-      database: "koa_api_test"
+      host: '127.0.0.1',
+      user: 'oleksandr',
+      password: 'postgres',
+      database: 'koa_api_test'
     },
     migrations: {
-      directory: path.join(BASE_PATH, "migrations")
+      directory: path.join(BASE_PATH, 'migrations')
     },
     seeds: {
-      directory: path.join(BASE_PATH, "seeds")
+      directory: path.join(BASE_PATH, 'seeds')
     }
   },
   development: {
-    client: "pg",
+    client: 'pg',
     connection: {
-      host: "127.0.0.1",
-      user: "oleksandr",
-      password: "postgres",
-      database: "koa_api"
+      host: '127.0.0.1',
+      user: 'oleksandr',
+      password: 'postgres',
+      database: 'koa_api'
     },
     migrations: {
-      directory: path.join(BASE_PATH, "migrations")
+      directory: path.join(BASE_PATH, 'migrations')
     },
     seeds: {
-      directory: path.join(BASE_PATH, "seeds")
+      directory: path.join(BASE_PATH, 'seeds')
     }
   }
 };
