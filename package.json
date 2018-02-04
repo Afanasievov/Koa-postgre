@@ -4,19 +4,17 @@
   "private": true,
   "scripts": {
     "mocha": "mocha --exit",
-    "lint": "npm run prettier && eslint --ext js src test",
-    "prettier": "prettier --write './src/**/*.js' './test/**/*.js'",
+    "lint": "eslint --ext js ./ src test",
     "start": "node ./src/server/index.js",
     "test": "npm run lint && npm run mocha"
   },
   "lint-staged": {
-    "*.{json,css,md}": ["npm run prettier"],
-    "*.{js}": ["npm run lint", "git add"]
+    "*.js": ["npm run lint", "git add"]
   },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
-      "pre-push": "lint-staged && npm test"
+      "pre-push": ["npm run lint && npm test"]
     }
   },
   "keywords": [],
@@ -26,14 +24,11 @@
     "chai": "4.1.2",
     "chai-http": "3.0.0",
     "eslint": "4.16.0",
-    "eslint-config-airbnb-base": "12.1.0",
-    "eslint-config-prettier": "2.9.0",
-    "eslint-plugin-import": "2.8.0",
-    "eslint-plugin-prettier": "2.6.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
     "husky": "0.15.0-rc.3",
     "lint-staged": "6.1.0",
-    "mocha": "5.0.0",
-    "prettier": "1.10.2"
+    "mocha": "5.0.0"
   },
   "dependencies": {
     "chalk": "2.3.0",

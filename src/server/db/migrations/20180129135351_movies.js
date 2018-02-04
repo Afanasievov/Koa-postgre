@@ -1,4 +1,4 @@
-exports.up = (knex) =>
+exports.up = knex =>
   knex.schema.createTable('movies', (table) => {
     table.increments();
     table
@@ -10,4 +10,4 @@ exports.up = (knex) =>
     table.boolean('explicit').notNullable();
   });
 
-exports.down = (knex) => knex.schema.dropTable('movies');
+exports.down = knex => knex.schema.dropTable('movies');

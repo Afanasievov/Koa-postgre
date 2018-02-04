@@ -9,14 +9,14 @@ module.exports = {
       host: '127.0.0.1',
       user: 'oleksandr',
       password: 'postgres',
-      database: 'koa_api_test'
+      database: 'koa_api_test',
     },
     migrations: {
-      directory: path.join(BASE_PATH, 'migrations')
+      directory: path.join(BASE_PATH, 'migrations'),
     },
     seeds: {
-      directory: path.join(BASE_PATH, 'seeds')
-    }
+      directory: path.join(BASE_PATH, 'seeds'),
+    },
   },
   development: {
     client: 'pg',
@@ -24,13 +24,13 @@ module.exports = {
       host: '127.0.0.1',
       user: 'oleksandr',
       password: 'postgres',
-      database: 'koa_api'
+      database: 'koa_api',
     },
     migrations: {
-      directory: path.join(BASE_PATH, 'migrations')
+      directory: path.join(BASE_PATH, 'migrations'),
     },
     seeds: {
-      directory: path.join(BASE_PATH, 'seeds')
-    }
-  }
+      directory: path.join(BASE_PATH, 'seeds'),
+    },
+  },
 };

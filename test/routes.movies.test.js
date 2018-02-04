@@ -14,8 +14,7 @@ describe('routes : movies', () => {
     knex.migrate
       .rollback()
       .then(() => knex.migrate.latest())
-      .then(() => knex.seed.run())
-  );
+      .then(() => knex.seed.run()));
 
   afterEach(() => knex.migrate.rollback());
 
@@ -30,7 +29,13 @@ describe('routes : movies', () => {
           res.type.should.equal('application/json');
           res.body.status.should.eql('success');
           res.body.data.length.should.eql(3);
-          res.body.data[0].should.include.keys('id', 'name', 'genre', 'rating', 'explicit');
+          res.body.data[0].should.include.keys(
+            'id',
+            'name',
+            'genre',
+            'rating',
+            'explicit',
+          );
           done();
         });
     });
@@ -75,7 +80,7 @@ describe('routes : movies', () => {
           name: 'Titanic',
           genre: 'Drama',
           rating: 8,
-          explicit: true
+          explicit: true,
         })
         .end((err, res) => {
           should.not.exist(err);
@@ -92,7 +97,7 @@ describe('routes : movies', () => {
         .request(server)
         .post('/api/v1/movies')
         .send({
-          name: 'Titanic'
+          name: 'Titanic',
         })
         .end((err, res) => {
           should.exist(err);
@@ -114,7 +119,9 @@ describe('routes : movies', () => {
           chai
             .request(server)
             .put(`/api/v1/movies/${movieObject.id}`)
-            .send({ rating: 9 })
+            .send({
+              rating: 9,
+            })
             .end((err, res) => {
               should.not.exist(err);
               res.status.should.equal(codes.OK);
@@ -133,7 +140,7 @@ describe('routes : movies', () => {
         .request(server)
         .put('/api/v1/movies/9999999')
         .send({
-          rating: 9
+          rating: 9,
         })
         .end((err, res) => {
           should.exist(err);

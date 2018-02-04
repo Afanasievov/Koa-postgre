@@ -11,7 +11,7 @@ router.get(BASE_URL, async (ctx) => {
 
     ctx.body = {
       status: 'success',
-      data: movies
+      data: movies,
     };
   } catch (err) {
     logger.error(err.message || err.Message || err);
@@ -24,20 +24,20 @@ router.get(`${BASE_URL}/:id`, async (ctx) => {
     if (movie.length) {
       ctx.body = {
         status: 'success',
-        data: movie
+        data: movie,
       };
     } else {
       ctx.status = codes.NOT_FOUND;
       ctx.body = {
         status: 'error',
-        message: 'That movie does not exist.'
+        message: 'That movie does not exist.',
       };
     }
   } catch (err) {
     ctx.status = codes.BAD_REQUEST;
     ctx.body = {
       status: 'error',
-      message: err.message || 'Sorry, an error has occurred.'
+      message: err.message || 'Sorry, an error has occurred.',
     };
   }
 });
@@ -49,20 +49,20 @@ router.post(`${BASE_URL}`, async (ctx) => {
       ctx.status = codes.CREATED;
       ctx.body = {
         status: 'success',
-        data: movie
+        data: movie,
       };
     } else {
       ctx.status = codes.BAD_REQUEST;
       ctx.body = {
         status: 'error',
-        message: 'Something went wrong.'
+        message: 'Something went wrong.',
       };
     }
   } catch (err) {
     ctx.status = codes.BAD_REQUEST;
     ctx.body = {
       status: 'error',
-      message: err.message || 'Sorry, an error has occurred.'
+      message: err.message || 'Sorry, an error has occurred.',
     };
   }
 });
@@ -74,20 +74,20 @@ router.put(`${BASE_URL}/:id`, async (ctx) => {
       ctx.status = codes.OK;
       ctx.body = {
         status: 'success',
-        data: movie
+        data: movie,
       };
     } else {
       ctx.status = codes.NOT_FOUND;
       ctx.body = {
         status: 'error',
-        message: 'That movie does not exist.'
+        message: 'That movie does not exist.',
       };
     }
   } catch (err) {
     ctx.status = codes.BAD_REQUEST;
     ctx.body = {
       status: 'error',
-      message: err.message || 'Sorry, an error has occurred.'
+      message: err.message || 'Sorry, an error has occurred.',
     };
   }
 });
@@ -99,20 +99,20 @@ router.delete(`${BASE_URL}/:id`, async (ctx) => {
       ctx.status = codes.OK;
       ctx.body = {
         status: 'success',
-        data: movie
+        data: movie,
       };
     } else {
       ctx.status = codes.NOT_FOUND;
       ctx.body = {
         status: 'error',
-        message: 'That movie does not exist.'
+        message: 'That movie does not exist.',
       };
     }
   } catch (err) {
     ctx.status = codes.BAD_REQUEST;
     ctx.body = {
       status: 'error',
-      message: err.message || 'Sorry, an error has occurred.'
+      message: err.message || 'Sorry, an error has occurred.',
     };
   }
 });
