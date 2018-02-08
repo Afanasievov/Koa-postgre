@@ -12,7 +12,8 @@ passport.deserializeUser((id, done) => knex('users')
   .catch(err => done(err, null)));
 
 passport.use(new LocalStrategy(options, (username, password, done) => knex('users')
-  .where(username)
+  .where({ username })
+  .first()
   .then((user) => {
     if (user && password === user.password) {
       return done(null, user);
