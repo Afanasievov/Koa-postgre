@@ -3,6 +3,7 @@ module.exports = {
     v1: '/v1',
   },
   paths: {
+    api: '/api',
     auth: '/auth',
     login: '/login',
     logout: '/logout',

@@ -20,7 +20,7 @@ router.post(`${baseUrl}${paths.register}`, async (ctx) => {
   return passport.authenticate('local', (err, user) => {
     if (user) {
       ctx.login(user);
-      ctx.redirect((`${baseUrl}${versions.v1}${paths.status}`));
+      ctx.redirect((`${paths.api}${baseUrl}${paths.status}`));
     } else {
       ctx.status = codes.BAD_REQUEST;
       ctx.body = { status: statuses(codes.BAD_REQUEST) };
@@ -33,7 +33,7 @@ router.get(`${baseUrl}${paths.status}`, async (ctx) => {
     ctx.type = 'html';
     ctx.body = fs.createReadStream('./src/server/views/status.html');
   } else {
-    ctx.redirect('/auth/login');
+    ctx.redirect(`${paths.api}${baseUrl}${paths.login}`);
   }
 });
 
@@ -42,7 +42,7 @@ router.get(`${baseUrl}${paths.login}`, async (ctx) => {
     ctx.type = 'html';
     ctx.body = fs.createReadStream('./src/server/views/login.html');
   } else {
-    ctx.redirect(`${baseUrl}${paths.status}`);
+    ctx.redirect(`${paths.api}${baseUrl}${paths.status}`);
   }
 });
 
@@ -50,17 +50,17 @@ router.post(`${baseUrl}${paths.login}`, async ctx =>
   passport.authenticate('local', (err, user) => {
     if (user) {
       ctx.login(user);
-      ctx.redirect(`${baseUrl}${paths.status}`);
+      ctx.redirect(`${paths.api}${baseUrl}${paths.status}`);
     } else {
       ctx.status = codes.BAD_REQUEST;
       ctx.body = { status: statuses(codes.BAD_REQUEST) };
     }
   })(ctx));
 
-router.get(`${baseUrl}/{paths.logout}`, async (ctx) => {
+router.get(`${baseUrl}${paths.logout}`, async (ctx) => {
   if (ctx.isAuthenticated()) {
     ctx.logout();
-    ctx.redirect(`${baseUrl}${paths.login}`);
+    ctx.redirect(`${paths.api}${baseUrl}${paths.login}`);
   } else {
     ctx.body = { success: false };
     ctx.throw(codes.UNAUTHORIZED);

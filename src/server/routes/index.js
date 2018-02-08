@@ -1,12 +1,13 @@
 const path = require('path');
 const fs = require('fs');
+const { paths } = require('../../config/routes');
 
 /**
  * Bootstrap & auto load the routes
  * @type {posix|exports|module.exports}
  */
 module.exports = (app) => {
-  const baseUrl = '/api/';
+  const baseUrl = paths.api;
   const bootstrap = (dir) => {
     const readDirRecursive = (folder) => {
       if (fs.statSync(folder).isDirectory()) {
