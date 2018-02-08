@@ -16,10 +16,11 @@ router.get(`${baseUrl}${paths.register}`, async (ctx) => {
 
 router.post(`${baseUrl}${paths.register}`, async (ctx) => {
   await queries.addUser(ctx.request.body);
+
   return passport.authenticate('local', (err, user) => {
     if (user) {
       ctx.login(user);
-      ctx.redirect((`${baseUrl}${paths.status}`));
+      ctx.redirect((`${baseUrl}${versions.v1}${paths.status}`));
     } else {
       ctx.status = codes.BAD_REQUEST;
       ctx.body = { status: statuses(codes.BAD_REQUEST) };

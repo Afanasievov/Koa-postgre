@@ -50,7 +50,7 @@ describe('routes : auth', () => {
         });
     });
   });
-  describe(`POST ${paths.auth}${paths.loging}`, () => {
+  describe(`POST ${paths.auth}${paths.login}`, () => {
     it('should login a user', (done) => {
       chai.request(server)
         .post(`/api${versions.v1}${paths.auth}${paths.login}`)

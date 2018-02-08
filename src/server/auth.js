@@ -1,8 +1,11 @@
 const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
 const knex = require('./db/connection');
+const bcrypt = require('bcrypt');
 
 const options = {};
+const comparePass = (userPassword, databasePassword) =>
+  bcrypt.compareSync(userPassword, databasePassword);
 
 passport.serializeUser((user, done) => done(null, user.id));
 
@@ -14,11 +17,5 @@ passport.deserializeUser((id, done) => knex('users')
 passport.use(new LocalStrategy(options, (username, password, done) => knex('users')
   .where({ username })
   .first()
-  .then((user) => {
-    if (user && password === user.password) {
-      return done(null, user);
-    }
-
-    return done(null, false);
-  })
+  .then(user => done(null, comparePass(password, user.password) ? user : null))
   .catch(err => done(err))));
