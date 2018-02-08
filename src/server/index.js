@@ -1,12 +1,11 @@
 const Koa = require('koa');
 const koaLogger = require('koa-logger');
 const bodyParser = require('koa-bodyparser');
-const logger = require('./services/logger');
+const logger = require('../services/logger');
 const session = require('koa-session');
 const passport = require('koa-passport');
 
-const indexRoutes = require('./routes/index');
-const movieRoutes = require('./routes/movies');
+const loadRoutes = require('./routes');
 
 const app = new Koa();
 const PORT = 1337;
@@ -28,8 +27,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // routes
-app.use(indexRoutes.routes());
-app.use(movieRoutes.routes());
+loadRoutes(app);
+
 
 // server
 const server = app.listen(PORT, () => {
