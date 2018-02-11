@@ -1,0 +1,15 @@
+html
+  head
+    meta(charset='tf-8')
+    title Login
+body
+  h1 Login
+  form(action='/api/v1/auth/login' method='post')
+    p
+      label Username: 
+        input(type='text' name='username')
+    p
+      label Password: 
+        input(type='password' name='password')
+    p
+      button(type='submit') Log In

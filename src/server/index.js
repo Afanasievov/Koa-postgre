@@ -4,6 +4,7 @@ const bodyParser = require('koa-bodyparser');
 const session = require('koa-session');
 const passport = require('koa-passport');
 const store = require('./session');
+const views = require('koa-views');
 
 const loadRoutes = require('./routes');
 
@@ -25,6 +26,8 @@ require('./auth');
 app.use(passport.initialize());
 app.use(passport.session());
 
+// views
+app.use(views(`${__dirname}/views`, { extension: 'pug' }));
 // routes
 loadRoutes(app);
 

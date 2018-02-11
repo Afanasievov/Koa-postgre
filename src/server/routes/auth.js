@@ -1,6 +1,5 @@
 const Router = require('koa-router');
 const passport = require('koa-passport');
-const fs = require('fs');
 const queries = require('../db/queries/users');
 const auth = require('../../services/auth');
 const codes = require('http-status-codes');
@@ -12,7 +11,7 @@ const statuses = codes.getStatusText;
 
 router.get(`${baseUrl}${paths.register}`, async (ctx) => {
   ctx.type = 'html';
-  ctx.body = fs.createReadStream('./src/server/views/register.html');
+  await ctx.render('register');
 });
 
 router.post(`${baseUrl}${paths.register}`, async (ctx) => {
@@ -32,7 +31,7 @@ router.post(`${baseUrl}${paths.register}`, async (ctx) => {
 router.get(`${baseUrl}${paths.status}`, async (ctx) => {
   if (auth.ensureAuthenticated(ctx)) {
     ctx.type = 'html';
-    ctx.body = fs.createReadStream('./src/server/views/status.html');
+    await ctx.render('status');
   } else {
     ctx.redirect(`${baseUrl}${paths.login}`);
   }
@@ -41,7 +40,7 @@ router.get(`${baseUrl}${paths.status}`, async (ctx) => {
 router.get(`${baseUrl}${paths.login}`, async (ctx) => {
   if (!auth.ensureAuthenticated(ctx)) {
     ctx.type = 'html';
-    ctx.body = fs.createReadStream('./src/server/views/login.html');
+    await ctx.render('login');
   } else {
     ctx.redirect(`${baseUrl}${paths.status}`);
   }
