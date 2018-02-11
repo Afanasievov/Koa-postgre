@@ -68,7 +68,6 @@ describe('routes : auth', () => {
       chai.request(server)
         .get(`${baseUrl}${paths.login}`)
         .end((err, res) => {
-          console.log(err);
           should.not.exist(err);
           res.redirects.length.should.eql(0);
           res.status.should.eql(codes.OK);
