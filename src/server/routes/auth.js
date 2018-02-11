@@ -6,7 +6,7 @@ const codes = require('http-status-codes');
 const { versions, paths } = require('../../config/routes');
 
 const router = new Router();
-const baseUrl = `${versions.v1}${paths.auth}`;
+const baseUrl = `${paths.api}${versions.v1}${paths.auth}`;
 const statuses = codes.getStatusText;
 
 router.get(`${baseUrl}${paths.register}`, async (ctx) => {
@@ -20,7 +20,7 @@ router.post(`${baseUrl}${paths.register}`, async (ctx) => {
   return passport.authenticate('local', (err, user) => {
     if (user) {
       ctx.login(user);
-      ctx.redirect((`${paths.api}${baseUrl}${paths.status}`));
+      ctx.redirect(`${baseUrl}${paths.status}`);
     } else {
       ctx.status = codes.BAD_REQUEST;
       ctx.body = { status: statuses(codes.BAD_REQUEST) };
@@ -33,7 +33,7 @@ router.get(`${baseUrl}${paths.status}`, async (ctx) => {
     ctx.type = 'html';
     ctx.body = fs.createReadStream('./src/server/views/status.html');
   } else {
-    ctx.redirect(`${paths.api}${baseUrl}${paths.login}`);
+    ctx.redirect(`${baseUrl}${paths.login}`);
   }
 });
 
@@ -42,7 +42,7 @@ router.get(`${baseUrl}${paths.login}`, async (ctx) => {
     ctx.type = 'html';
     ctx.body = fs.createReadStream('./src/server/views/login.html');
   } else {
-    ctx.redirect(`${paths.api}${baseUrl}${paths.status}`);
+    ctx.redirect(`${baseUrl}${paths.status}`);
   }
 });
 
@@ -50,7 +50,7 @@ router.post(`${baseUrl}${paths.login}`, async ctx =>
   passport.authenticate('local', (err, user) => {
     if (user) {
       ctx.login(user);
-      ctx.redirect(`${paths.api}${baseUrl}${paths.status}`);
+      ctx.redirect(`${baseUrl}${paths.status}`);
     } else {
       ctx.status = codes.BAD_REQUEST;
       ctx.body = { status: statuses(codes.BAD_REQUEST) };
@@ -60,7 +60,7 @@ router.post(`${baseUrl}${paths.login}`, async ctx =>
 router.get(`${baseUrl}${paths.logout}`, async (ctx) => {
   if (ctx.isAuthenticated()) {
     ctx.logout();
-    ctx.redirect(`${paths.api}${baseUrl}${paths.login}`);
+    ctx.redirect(`${baseUrl}${paths.login}`);
   } else {
     ctx.body = { success: false };
     ctx.throw(codes.UNAUTHORIZED);

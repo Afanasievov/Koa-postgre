@@ -8,6 +8,7 @@ exports.up = knex =>
     table.string('genre').notNullable();
     table.integer('rating').notNullable();
     table.boolean('explicit').notNullable();
+    table.timestamps(true, true);
   });
 
 exports.down = knex => knex.schema.dropTable('movies');

@@ -3,24 +3,38 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const codes = require('http-status-codes');
-const server = require('../src/server/index');
+const app = require('../src/server/');
+const logger = require('../src/services/logger');
 const knex = require('../src/server/db/connection');
+const { port, host } = require('../src/config/server.config');
 const { paths, versions } = require('../src/config/routes');
 
 chai.use(chaiHttp);
 const should = chai.should();
+const baseUrl = `${paths.api}${versions.v1}${paths.auth}`;
+let server;
 
 describe('routes : auth', () => {
-  beforeEach(() => knex.migrate.rollback()
-    .then(() => knex.migrate.latest())
-    .then(() => knex.seed.run()));
+  before(() => new Promise((resolve, reject) =>
+    knex.migrate.rollback()
+      .then(() => knex.migrate.latest())
+      .then(() => knex.seed.run())
+      .then(() => {
+        server = app.listen(port, host, () =>
+          logger.info(`Server is listening on ${host}:${port}.`));
+      })
+      .then(() => resolve())
+      .catch(err => reject(err))));
 
-  afterEach(() => knex.migrate.rollback());
-
-  describe(`GET ${paths.auth}${paths.register}`, () => {
+  after(() => new Promise((resolve, reject) =>
+    knex.migrate.rollback()
+      .then(() => server.close())
+      .then(() => resolve(logger.info('Server is closed.')))
+      .catch(err => reject(err))));
+  describe(`GET ${baseUrl}${paths.register}`, () => {
     it('should render the register view', (done) => {
       chai.request(server)
-        .get(`/api${versions.v1}${paths.auth}${paths.register}`)
+        .get(`${baseUrl}${paths.register}`)
         .end((err, res) => {
           should.not.exist(err);
           res.redirects.length.should.eql(0);
@@ -34,10 +48,10 @@ describe('routes : auth', () => {
     });
   });
 
-  describe(`GET ${paths.auth}${paths.login}`, () => {
+  describe(`GET ${baseUrl}${paths.login}`, () => {
     it('should render the login view', (done) => {
       chai.request(server)
-        .get(`/api${versions.v1}${paths.auth}${paths.login}`)
+        .get(`${baseUrl}${paths.login}`)
         .end((err, res) => {
           should.not.exist(err);
           res.redirects.length.should.eql(0);
@@ -50,16 +64,16 @@ describe('routes : auth', () => {
         });
     });
   });
-  describe(`POST ${paths.auth}${paths.login}`, () => {
+  describe(`POST ${baseUrl}${paths.login}`, () => {
     it('should login a user', (done) => {
       chai.request(server)
-        .post(`/api${versions.v1}${paths.auth}${paths.login}`)
+        .post(`${baseUrl}${paths.login}`)
         .send({
           username: 'jeremy',
           password: 'johnson',
         })
         .end((err, res) => {
-          res.redirects[0].should.contain(`${paths.auth}${paths.status}`);
+          res.redirects[0].should.contain(`${baseUrl}${paths.status}`);
           done();
         });
     });
