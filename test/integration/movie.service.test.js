@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const axios = require('axios');
 const chai = require('chai');
 const codes = require('http-status-codes');
-const movies = require('./fixtures/movies');
+const movies = require('../fixtures/movies');
 
 const should = chai.should(); // eslint-disable-line no-unused-vars
 

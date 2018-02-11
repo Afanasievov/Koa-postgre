@@ -3,7 +3,7 @@ const koaLogger = require('koa-logger');
 const bodyParser = require('koa-bodyparser');
 const session = require('koa-session');
 const passport = require('koa-passport');
-const RedisStore = require('koa-redis');
+const store = require('./session');
 
 const loadRoutes = require('./routes');
 
@@ -11,9 +11,7 @@ const app = new Koa();
 
 // sessions
 app.keys = ['super-secret-key'];
-app.use(session({
-  store: new RedisStore(),
-}, app));
+app.use(session({ store }, app));
 
 // logger
 app.use(koaLogger());

@@ -3,11 +3,11 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const codes = require('http-status-codes');
-const app = require('../src/server/');
-const logger = require('../src/services/logger');
-const knex = require('../src/server/db/connection');
-const { port, host } = require('../src/config/server.config');
-const { paths, versions } = require('../src/config/routes');
+const app = require('../../src/server/');
+const logger = require('../../src/services/logger');
+const knex = require('../../src/server/db/connection');
+const { port, host } = require('../../src/config/server.config');
+const { paths, versions } = require('../../src/config/routes');
 
 chai.use(chaiHttp);
 const should = chai.should();
@@ -48,11 +48,27 @@ describe('routes : auth', () => {
     });
   });
 
+  describe(`POST ${baseUrl}${paths.register}`, () => {
+    it('should register a new user', (done) => {
+      chai.request(server)
+        .post(`${baseUrl}${paths.register}`)
+        .send({
+          username: 'michael',
+          password: 'herman',
+        })
+        .end((err, res) => {
+          res.redirects[0].should.contain(`${baseUrl}${paths.status}`);
+          done();
+        });
+    });
+  });
+
   describe(`GET ${baseUrl}${paths.login}`, () => {
     it('should render the login view', (done) => {
       chai.request(server)
         .get(`${baseUrl}${paths.login}`)
         .end((err, res) => {
+          console.log(err);
           should.not.exist(err);
           res.redirects.length.should.eql(0);
           res.status.should.eql(codes.OK);

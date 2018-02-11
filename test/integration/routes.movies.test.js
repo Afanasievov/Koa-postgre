@@ -3,12 +3,12 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const codes = require('http-status-codes');
-const app = require('../src/server/');
-const logger = require('../src/services/logger');
-const knex = require('../src/server/db/connection');
-const { port, host } = require('../src/config/server.config');
-const { paths, params, versions } = require('../src/config/routes');
-const messages = require('../src/config/messages');
+const app = require('../../src/server/');
+const logger = require('../../src/services/logger');
+const knex = require('../../src/server/db/connection');
+const { port, host } = require('../../src/config/server.config');
+const { paths, params, versions } = require('../../src/config/routes');
+const messages = require('../../src/config/messages');
 
 chai.use(chaiHttp);
 const should = chai.should();
