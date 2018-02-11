@@ -42,16 +42,8 @@ describe('routes : movies', () => {
         .end((err, res) => {
           should.not.exist(err);
           res.status.should.equal(codes.OK);
-          res.type.should.equal('application/json');
-          res.body.status.should.eql(statuses(codes.OK));
-          res.body.data.length.should.eql(3);
-          res.body.data[0].should.include.keys(
-            'id',
-            'name',
-            'genre',
-            'rating',
-            'explicit',
-          );
+          res.type.should.eql('text/html');
+          res.text.should.contain('<h1>Movies</h1>');
           done();
         });
     });

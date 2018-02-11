@@ -13,10 +13,7 @@ router.get(baseUrl, async (ctx) => {
   try {
     const movies = await queries.getAllMovies();
 
-    ctx.body = {
-      status: statuses(codes.OK),
-      data: movies,
-    };
+    await ctx.render('movies', { movies });
   } catch (err) {
     logger.error(err.message || err);
   }
