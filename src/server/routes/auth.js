@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 const passport = require('koa-passport');
-const queries = require('../db/queries/users');
+const queries = require('../../db/queries/users');
 const auth = require('../../services/auth');
 const codes = require('http-status-codes');
 const { versions, paths } = require('../../config/routes');

@@ -1,9 +1,10 @@
 const Router = require('koa-router');
 const codes = require('http-status-codes');
-const queries = require('../db/queries/movies');
+const queries = require('../../db/queries/movies');
 const logger = require('../../services/logger');
 const { versions, paths, params } = require('../../config/routes');
 const messages = require('../../config/messages');
+const mapMovies = require('../../services/map_movies');
 
 const router = new Router();
 const baseUrl = `${paths.api}${versions.v1}${paths.movies}`;
@@ -11,10 +12,10 @@ const statuses = codes.getStatusText;
 
 router.get(baseUrl, async (ctx) => {
   try {
-    const movies = await queries.getAllMovies();
+    let movies = await queries.getAllMovies();
 
+    movies = await mapMovies(movies);
     ctx.body = {
-      status: statuses(codes.OK),
       data: movies,
     };
   } catch (err) {

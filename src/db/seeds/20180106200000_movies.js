@@ -1,24 +1,21 @@
 exports.seed = knex =>
-  knex('movies')
+  knex('Movies')
     .del()
     .then(() =>
-      knex.batchInsert('movies', [
+      knex.batchInsert('Movies', [
         {
           name: 'The Land Before Time',
-          genre: 'Fantasy',
+          year: 1980,
           rating: 7,
-          explicit: false,
         },
         {
           name: 'Jurassic Park',
-          genre: 'Science Fiction',
+          year: 1981,
           rating: 9,
-          explicit: true,
         },
         {
           name: 'Ice Age: Dawn of the Dinosaurs',
-          genre: 'Action/Romance',
+          year: 1982,
           rating: 5,
-          explicit: false,
         },
       ]));

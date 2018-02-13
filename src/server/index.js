@@ -5,6 +5,8 @@ const session = require('koa-session');
 const passport = require('koa-passport');
 const store = require('./session');
 const views = require('koa-views');
+const { NotFoundError } = require('../services/errors');
+const errorHandler = require('./middlewars/error_handling');
 
 const loadRoutes = require('./routes');
 
@@ -28,7 +30,15 @@ app.use(passport.session());
 
 // views
 app.use(views(`${__dirname}/views`, { extension: 'pug' }));
+
 // routes
 loadRoutes(app);
+
+// errors
+app.use((req, res, next) => {
+  next(new NotFoundError());
+});
+
+app.use(errorHandler);
 
 module.exports = app;

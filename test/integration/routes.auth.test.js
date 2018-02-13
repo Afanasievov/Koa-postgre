@@ -5,7 +5,7 @@ const chaiHttp = require('chai-http');
 const codes = require('http-status-codes');
 const app = require('../../src/server/');
 const logger = require('../../src/services/logger');
-const knex = require('../../src/server/db/connection');
+const knex = require('../../src/db/connection');
 const { port, host } = require('../../src/config/server.config');
 const { paths, versions } = require('../../src/config/routes');
 
