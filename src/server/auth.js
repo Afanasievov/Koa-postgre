@@ -9,12 +9,12 @@ const comparePass = (userPassword, databasePassword) =>
 
 passport.serializeUser((user, done) => done(null, user.id));
 
-passport.deserializeUser((id, done) => knex('users')
+passport.deserializeUser((id, done) => knex('Users')
   .where({ id })
   .then(user => done(null, user))
   .catch(err => done(err, null)));
 
-passport.use(new LocalStrategy(options, (username, password, done) => knex('users')
+passport.use(new LocalStrategy(options, (username, password, done) => knex('Users')
   .where({ username })
   .first()
   .then(user => done(null, comparePass(password, user.password) ? user : null))

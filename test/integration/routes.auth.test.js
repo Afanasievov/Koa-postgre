@@ -84,7 +84,7 @@ describe('routes : auth', () => {
       chai.request(server)
         .post(`${baseUrl}${paths.login}`)
         .send({
-          username: 'jeremy',
+          username: 'jer',
           password: 'johnson',
         })
         .end((err, res) => {

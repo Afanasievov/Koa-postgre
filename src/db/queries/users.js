@@ -5,7 +5,7 @@ const addUser = ({ username, password }) => {
   const salt = bcrypt.genSaltSync();
   const hash = bcrypt.hashSync(password, salt);
 
-  return knex('users')
+  return knex('Users')
     .insert({ password: hash, username })
     .returning('*');
 };
