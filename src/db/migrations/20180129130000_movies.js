@@ -3,7 +3,7 @@ exports.up = knex =>
     table.increments();
     table.string('name').notNullable();
     table.integer('year').notNullable();
-    table.integer('rating');
+    table.decimal('rating', 2, 1);
     table.text('info');
     table.timestamps(true, true);
   });

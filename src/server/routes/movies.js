@@ -1,7 +1,6 @@
 const Router = require('koa-router');
 const codes = require('http-status-codes');
 const queries = require('../../db/queries/movies');
-const logger = require('../../services/logger');
 const { versions, paths, params } = require('../../config/routes');
 const messages = require('../../config/messages');
 const mapMovies = require('../../services/map_movies');
@@ -12,38 +11,32 @@ const statuses = codes.getStatusText;
 
 router.get(baseUrl, async (ctx) => {
   try {
-    let movies = await queries.getAllMovies();
+    let movies = await queries.getMovies({ params: ctx.query });
 
     movies = await mapMovies(movies);
     ctx.body = {
       data: movies,
     };
   } catch (err) {
-    logger.error(err.message || err);
+    ctx.throw(err);
   }
 });
 
 router.get(`${baseUrl}${params.id}`, async (ctx) => {
   try {
-    const movie = await queries.getSingleMovie(ctx.params.id);
+    let movie = await queries.getSingleMovie(ctx.params.id);
+
+    movie = await mapMovies(movie);
     if (movie.length) {
       ctx.body = {
         status: statuses(codes.OK),
         data: movie,
       };
     } else {
-      ctx.status = codes.NOT_FOUND;
-      ctx.body = {
-        status: statuses(codes.NOT_FOUND),
-        message: messages.notFound,
-      };
+      ctx.throw(codes.NOT_FOUND);
     }
   } catch (err) {
-    ctx.status = codes.BAD_REQUEST;
-    ctx.body = {
-      status: 'error',
-      message: err.message || messages.unexpected,
-    };
+    ctx.throw(err);
   }
 });
 

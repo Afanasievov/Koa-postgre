@@ -1,27 +1,61 @@
 const knex = require('../connection');
 
-const getAllMovies = () => knex({
-  M: 'Movies', C: 'Countries', G: 'Genres', MC: 'MovieCountries', MG: 'MovieGenres',
-})
-  .select({
-    mId: 'M.id',
-    mName: 'M.name',
-    mYear: 'M.year',
-    mRating: 'M.rating',
-    gName: 'G.name',
-    cName: 'C.name',
-  })
-  .whereRaw(
-    '?? = ?? and ?? = ?? and ?? = ?? and ?? = ??',
-    ['MC.movieId', 'M.id', 'C.id', 'MC.countryId', 'MG.movieId', 'M.id', 'G.id', 'MG.genreId'],
-  );
+/**
+ * @param {Object} params
+ * @param {Object} params.where
+ * @param {Object} params.orderBy
+ * @returns {Array<Object>}
+ */
+const getMovies = ({ where, orderBy }) =>
+  knex('Movies')
+    .select({
+      mId: 'Movies.id',
+      mName: 'Movies.name',
+      mYear: 'Movies.year',
+      mRating: 'Movies.rating',
+      coId: 'Countries.id',
+      coName: 'Countries.name',
+      gId: 'Genres.id',
+      gName: 'Genres.name',
+    })
+    .innerJoin('MovieCountries', 'MovieCountries.id', 'Movies.id')
+    .innerJoin('Countries', 'Countries.id', 'MovieCountries.countryId')
+    .innerJoin('MovieGenres', 'MovieGenres.movieId', 'Movies.id')
+    .innerJoin('Genres', 'Genres.id', 'MovieGenres.genreId')
+    .where(where)
+    .orderBy(orderBy);
 
 const getSingleMovie = id =>
   knex('Movies')
-    .select('*')
-    .where({
-      id: parseInt(id, 10),
-    });
+    .select({
+      mId: 'Movies.id',
+      mName: 'Movies.name',
+      mYear: 'Movies.year',
+      mRating: 'Movies.rating',
+      coId: 'Countries.id',
+      coName: 'Countries.name',
+      gId: 'Genres.id',
+      gName: 'Genres.name',
+      peId: 'Persons.id',
+      peFName: 'Persons.fName',
+      peLName: 'Persons.lName',
+      peNick: 'Persons.nick',
+      poId: 'Positions.id',
+      poName: 'Positions.name',
+      chId: 'Characters.id',
+      chFName: 'Characters.fName',
+      chLName: 'Characters.lName',
+      chNick: 'Characters.nick',
+    })
+    .innerJoin('MovieCountries', 'MovieCountries.movieId', 'Movies.id')
+    .innerJoin('Countries', 'Countries.id', 'MovieCountries.countryId')
+    .innerJoin('MovieGenres', 'MovieGenres.movieId', 'Movies.id')
+    .innerJoin('Genres', 'Genres.id', 'MovieGenres.genreId')
+    .leftOuterJoin('MoviePersons', 'MoviePersons.movieId', 'Movies.id')
+    .leftOuterJoin('Persons', 'Persons.id', 'MoviePersons.personId')
+    .leftOuterJoin('Positions', 'Positions.id', 'MoviePersons.positionId')
+    .leftOuterJoin('Characters', 'Characters.id', 'MoviePersons.characterId')
+    .where('Movies.id', id);
 
 const addMovie = (movie) => {
   const countries = [];
@@ -56,7 +90,7 @@ const deleteMovie = id =>
     .returning('*');
 
 module.exports = {
-  getAllMovies,
+  getMovies,
   getSingleMovie,
   addMovie,
   updateMovie,
