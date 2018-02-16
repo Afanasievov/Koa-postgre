@@ -19,4 +19,16 @@ exports.seed = knex => knex('Characters')
       nick: null,
       info: null,
     },
+    {
+      fName: 'Castor',
+      lName: 'Troy',
+      nick: null,
+      info: null,
+    },
+    {
+      fName: 'Sean',
+      lName: 'Archer',
+      nick: null,
+      info: null,
+    },
   ]));

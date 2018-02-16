@@ -1,12 +1,6 @@
 const knex = require('../connection');
 
-/**
- * @param {Object} params
- * @param {Object} params.where
- * @param {Object} params.orderBy
- * @returns {Array<Object>}
- */
-const getMovies = ({ where, orderBy }) =>
+const getMovies = () =>
   knex('Movies')
     .select({
       mId: 'Movies.id',
@@ -21,9 +15,7 @@ const getMovies = ({ where, orderBy }) =>
     .innerJoin('MovieCountries', 'MovieCountries.id', 'Movies.id')
     .innerJoin('Countries', 'Countries.id', 'MovieCountries.countryId')
     .innerJoin('MovieGenres', 'MovieGenres.movieId', 'Movies.id')
-    .innerJoin('Genres', 'Genres.id', 'MovieGenres.genreId')
-    .where(where)
-    .orderBy(orderBy);
+    .innerJoin('Genres', 'Genres.id', 'MovieGenres.genreId');
 
 const getSingleMovie = id =>
   knex('Movies')

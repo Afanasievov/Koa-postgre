@@ -55,4 +55,59 @@ exports.seed = knex => knex('MoviePersons')
       positionId: 3,
       characterId: null,
     },
+
+    {
+      movieId: 2,
+      personId: 10,
+      positionId: 2,
+      characterId: null,
+    },
+    {
+      movieId: 2,
+      personId: 11,
+      positionId: 5,
+      characterId: null,
+    },
+    {
+      movieId: 2,
+      personId: 12,
+      positionId: 5,
+      characterId: null,
+    },
+    {
+      movieId: 2,
+      personId: 13,
+      positionId: 4,
+      characterId: null,
+    },
+    {
+      movieId: 2,
+      personId: 14,
+      positionId: 3,
+      characterId: null,
+    },
+    {
+      movieId: 2,
+      personId: 15,
+      positionId: 1,
+      characterId: 4,
+    },
+    {
+      movieId: 2,
+      personId: 15,
+      positionId: 1,
+      characterId: 5,
+    },
+    {
+      movieId: 2,
+      personId: 16,
+      positionId: 1,
+      characterId: 4,
+    },
+    {
+      movieId: 2,
+      personId: 16,
+      positionId: 1,
+      characterId: 5,
+    },
   ]));

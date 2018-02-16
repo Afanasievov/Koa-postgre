@@ -11,7 +11,7 @@ const statuses = codes.getStatusText;
 
 router.get(baseUrl, async (ctx) => {
   try {
-    let movies = await queries.getMovies({ params: ctx.query });
+    let movies = await queries.getMovies();
 
     movies = await mapMovies(movies);
     ctx.body = {
