@@ -1,33 +1,33 @@
 const codes = require('http-status-codes');
-const queries = require('../../db/queries/movies');
+const queries = require('../../db/queries/persons');
 const messages = require('../../config/messages');
-const mapMovies = require('../../services/map_movies');
+const mapPersons = require('../../services/map_persons');
 
 const statuses = codes.getStatusText;
 
-const getAllMovies = async (ctx) => {
+const getAllPersons = async (ctx) => {
   try {
-    let movies = await queries.getMovies();
+    let persons = await queries.getPersons();
 
-    movies = await mapMovies(movies);
+    persons = await mapPersons(persons);
     ctx.body = {
       status: statuses(codes.OK),
-      data: movies,
+      data: persons,
     };
   } catch (err) {
     ctx.throw(err);
   }
 };
 
-const getSingleMovie = async (ctx) => {
+const getSinglePerson = async (ctx) => {
   try {
-    let movie = await queries.getSingleMovie(ctx.params.id);
+    let person = await queries.getSinglePerson(ctx.params.id);
 
-    movie = await mapMovies(movie)[0];
-    if (movie) {
+    person = await mapPersons(person)[0];
+    if (person) {
       ctx.body = {
         status: statuses(codes.OK),
-        data: movie,
+        data: person,
       };
     } else {
       ctx.throw(codes.NOT_FOUND);
@@ -37,9 +37,9 @@ const getSingleMovie = async (ctx) => {
   }
 };
 
-const addMovie = async (ctx) => {
+const addPerson = async (ctx) => {
   try {
-    const movie = await queries.addMovie(ctx.request.body);
+    const movie = await queries.addPerson(ctx.request.body);
 
     ctx.status = codes.CREATED;
     ctx.body = {
@@ -56,9 +56,9 @@ const addMovie = async (ctx) => {
   }
 };
 
-const updateMovie = async (ctx) => {
+const updatePerson = async (ctx) => {
   try {
-    const movie = await queries.updateMovie(ctx.params.id, ctx.request.body);
+    const movie = await queries.updatePerson(ctx.params.id, ctx.request.body);
     if (movie.length) {
       ctx.status = codes.OK;
       ctx.body = {
@@ -81,9 +81,9 @@ const updateMovie = async (ctx) => {
   }
 };
 
-const deleteMovie = async (ctx) => {
+const deletePerson = async (ctx) => {
   try {
-    const movie = await queries.deleteMovie(ctx.params.id);
+    const movie = await queries.deletePerson(ctx.params.id);
     if (movie.length) {
       ctx.status = codes.OK;
       ctx.body = {
@@ -107,9 +107,9 @@ const deleteMovie = async (ctx) => {
 };
 
 module.exports = {
-  getAllMovies,
-  getSingleMovie,
-  addMovie,
-  updateMovie,
-  deleteMovie,
+  getAllPersons,
+  getSinglePerson,
+  addPerson,
+  updatePerson,
+  deletePerson,
 };

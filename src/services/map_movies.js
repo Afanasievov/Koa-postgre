@@ -18,17 +18,17 @@ module.exports = (movies) => {
     obj[movie.mId].year = movie.mYear;
     obj[movie.mId].rating = movie.mRating;
 
-    // form film-countries array
+    // form movie-countries array
     if (!obj[movie.mId].countries.find(({ id }) => id === movie.coId)) {
       obj[movie.mId].countries.push({ id: movie.coId, name: movie.coName });
     }
 
-    // form film-genres array
+    // form movie-genres array
     if (!obj[movie.mId].genres.find(({ id }) => id === movie.gId)) {
       obj[movie.mId].genres.push({ id: movie.gId, name: movie.gName });
     }
 
-    // form film-persons array for a single movie
+    // form movie-persons array for a single movie
     if (movie.peId && !obj[movie.mId].persons) {
       obj[movie.mId].persons = [];
     }

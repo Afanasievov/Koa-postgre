@@ -8,6 +8,7 @@ module.exports = {
     login: '/login',
     logout: '/logout',
     movies: '/movies',
+    persons: '/persons',
     register: '/register',
     status: '/status',
   },
