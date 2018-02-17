@@ -15,4 +15,16 @@ exports.seed = knex =>
           rating: 7.3,
           info: 'In order to foil an extortion plot, an FBI agent undergoes a facial transplant surgery and assumes the identity and physical appearance of a terrorist, but the plan turns from bad to worse when the same terrorist impersonates the FBI agent.',
         },
+        {
+          name: 'Notorious',
+          year: 1946,
+          rating: 8.0,
+          info: 'A woman is asked to spy on a group of Nazi friends in South America. How far will she have to go to ingratiate herself with them?',
+        },
+        {
+          name: 'The Rock',
+          year: 1996,
+          rating: 7.4,
+          info: 'A mild-mannered chemist and an ex-con must lead the counterstrike when a rogue group of military men, led by a renegade general, threaten a nerve gas attack from Alcatraz against San Francisco.',
+        },
       ]));

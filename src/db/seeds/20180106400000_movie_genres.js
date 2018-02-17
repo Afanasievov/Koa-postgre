@@ -10,4 +10,10 @@ exports.seed = knex =>
       { movieId: 2, genreId: 5 },
       { movieId: 2, genreId: 19 },
       { movieId: 2, genreId: 23 },
+      { movieId: 3, genreId: 6 },
+      { movieId: 3, genreId: 16 },
+      { movieId: 3, genreId: 23 },
+      { movieId: 4, genreId: 2 },
+      { movieId: 4, genreId: 3 },
+      { movieId: 4, genreId: 23 },
     ]));
