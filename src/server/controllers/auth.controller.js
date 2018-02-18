@@ -1,8 +1,8 @@
 const codes = require('http-status-codes');
 const passport = require('koa-passport');
 const queries = require('../../db/queries/users');
-const { versions, paths } = require('../../config/routes');
-const auth = require('../../services/auth');
+const { versions, paths } = require('../config/routes');
+const auth = require('../services/auth');
 
 const statuses = codes.getStatusText;
 const baseUrl = `${paths.api}${versions.v1}${paths.auth}`;

@@ -7,11 +7,11 @@ const passport = require('koa-passport');
 const codes = require('http-status-codes');
 const app = require('../../src/server/');
 const store = require('../../src/server/session');
-const auth = require('../../src/services/auth');
+const auth = require('../../src/server/services/auth');
 const queries = require('../../src/db/queries/users');
-const logger = require('../../src/services/logger');
-const { port, host } = require('../../src/config/server.config');
-const { paths, versions } = require('../../src/config/routes');
+const logger = require('../../src/server/services/logger');
+const { port, host } = require('../../src/server/config/server.config');
+const { paths, versions } = require('../../src/server/config/routes');
 
 chai.use(chaiHttp);
 const should = chai.should();

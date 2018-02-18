@@ -1,4 +1,4 @@
-const positions = require('../../enums/positions.enum');
+const positions = require('../../server/enums/positions.enum');
 
 const entries = Object.values(positions);
 

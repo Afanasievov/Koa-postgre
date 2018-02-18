@@ -1,7 +1,7 @@
 const codes = require('http-status-codes');
 const queries = require('../../db/queries/movies');
-const messages = require('../../config/messages');
-const mapMovies = require('../../services/map_movies');
+const messages = require('../config/messages');
+const mapMovies = require('../services/map_movies');
 
 const statuses = codes.getStatusText;
 

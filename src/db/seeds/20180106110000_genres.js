@@ -1,4 +1,4 @@
-const genres = require('../../enums/genres.enum');
+const genres = require('../../server/enums/genres.enum');
 
 const entries = Object.values(genres);
 

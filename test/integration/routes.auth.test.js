@@ -4,10 +4,10 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const codes = require('http-status-codes');
 const app = require('../../src/server/');
-const logger = require('../../src/services/logger');
+const logger = require('../../src/server/services/logger');
 const knex = require('../../src/db/connection');
-const { port, host } = require('../../src/config/server.config');
-const { paths, versions } = require('../../src/config/routes');
+const { port, host } = require('../../src/server/config/server.config');
+const { paths, versions } = require('../../src/server/config/routes');
 
 chai.use(chaiHttp);
 const should = chai.should();

@@ -1,4 +1,4 @@
-const countries = require('../../enums/countries.enum');
+const countries = require('../../server/enums/countries.enum');
 
 const entries = Object.values(countries);
 

@@ -1,4 +1,4 @@
-const logger = require('../../services/logger');
+const logger = require('../services/logger');
 const codes = require('http-status-codes');
 
 const statuses = codes.getStatusText;
