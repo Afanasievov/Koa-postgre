@@ -8,7 +8,6 @@ const logger = require('../../src/server/services/logger');
 const knex = require('../../src/db/connection');
 const { port, host } = require('../../src/server/config/server.config');
 const { paths, params, versions } = require('../../src/server/config/routes');
-const messages = require('../../src/server/config/messages');
 
 chai.use(chaiHttp);
 const should = chai.should();
@@ -16,7 +15,7 @@ const statuses = codes.getStatusText;
 const baseUrl = `${paths.api}${versions.v1}${paths.movies}`;
 let server;
 
-describe.skip('routes : movies', () => {
+describe('routes : movies', () => {
   before(() => new Promise((resolve, reject) =>
     knex.migrate.rollback()
       .then(() => knex.migrate.latest())
@@ -44,13 +43,10 @@ describe.skip('routes : movies', () => {
           res.status.should.equal(codes.OK);
           res.type.should.equal('application/json');
           res.body.status.should.eql(statuses(codes.OK));
-          res.body.data.length.should.eql(3);
+          res.body.data.should.have.lengthOf.above(0);
           res.body.data[0].should.include.keys(
-            'id',
-            'name',
-            'genre',
-            'rating',
-            'explicit',
+            'id', 'name', 'year', 'rating',
+            'genres', 'countries',
           );
           done();
         });
@@ -67,7 +63,10 @@ describe.skip('routes : movies', () => {
           res.status.should.equal(codes.OK);
           res.type.should.equal('application/json');
           res.body.status.should.eql(statuses(codes.OK));
-          res.body.data[0].should.include.keys('id', 'name', 'genre', 'rating', 'explicit');
+          res.body.data.should.include.keys(
+            'id', 'name', 'year', 'rating',
+            'genres', 'countries', 'persons',
+          );
           done();
         });
     });
@@ -81,7 +80,7 @@ describe.skip('routes : movies', () => {
           res.status.should.equal(codes.NOT_FOUND);
           res.type.should.equal('application/json');
           res.body.status.should.eql(statuses(codes.NOT_FOUND));
-          res.body.message.should.eql(messages.notFound);
+          res.body.message.should.eql(statuses(codes.NOT_FOUND));
           done();
         });
     });
@@ -94,16 +93,15 @@ describe.skip('routes : movies', () => {
         .post(baseUrl)
         .send({
           name: 'Titanic',
-          genre: 'Drama',
+          year: 1997,
           rating: 8,
-          explicit: true,
         })
         .end((err, res) => {
           should.not.exist(err);
           res.status.should.equal(codes.CREATED);
           res.type.should.equal('application/json');
           res.body.status.should.eql(statuses(codes.CREATED));
-          res.body.data[0].should.include.keys('id', 'name', 'genre', 'rating', 'explicit');
+          res.body.data.should.include.keys('id', 'name', 'year', 'rating', 'info');
           done();
         });
     });
@@ -117,9 +115,7 @@ describe.skip('routes : movies', () => {
         })
         .end((err, res) => {
           should.exist(err);
-          res.status.should.equal(codes.BAD_REQUEST);
           res.type.should.equal('application/json');
-          res.body.status.should.eql(statuses(codes.BAD_REQUEST));
           should.exist(res.body.message);
           done();
         });
@@ -128,7 +124,7 @@ describe.skip('routes : movies', () => {
 
   describe(`PUT ${baseUrl}`, () => {
     it('should return the movie that was updated', (done) => {
-      knex('movies')
+      knex('Movies')
         .select('*')
         .then((movie) => {
           const movieObject = movie[0];
@@ -143,8 +139,8 @@ describe.skip('routes : movies', () => {
               res.status.should.equal(codes.OK);
               res.type.should.equal('application/json');
               res.body.status.should.eql(statuses(codes.OK));
-              res.body.data[0].should.include.keys('id', 'name', 'genre', 'rating', 'explicit');
-              const newMovieObject = res.body.data[0];
+              res.body.data.should.include.keys('id', 'name', 'year', 'rating', 'info');
+              const newMovieObject = res.body.data;
               newMovieObject.rating.should.not.eql(movieObject.rating);
               done();
             });
@@ -163,7 +159,7 @@ describe.skip('routes : movies', () => {
           res.status.should.equal(codes.NOT_FOUND);
           res.type.should.equal('application/json');
           res.body.status.should.eql(statuses(codes.NOT_FOUND));
-          res.body.message.should.eql(messages.notFound);
+          res.body.message.should.eql(statuses(codes.NOT_FOUND));
           done();
         });
     });
@@ -171,7 +167,7 @@ describe.skip('routes : movies', () => {
 
   describe(`DELETE ${baseUrl}${params.id}`, () => {
     it('should return the movie that was deleted', (done) => {
-      knex('movies')
+      knex('Movies')
         .select('*')
         .then((movies) => {
           const movieObject = movies[0];
@@ -184,8 +180,8 @@ describe.skip('routes : movies', () => {
               res.status.should.equal(codes.OK);
               res.type.should.equal('application/json');
               res.body.status.should.eql(statuses(codes.OK));
-              res.body.data[0].should.include.keys('id', 'name', 'genre', 'rating', 'explicit');
-              knex('movies')
+              res.body.data.should.include.keys('id', 'name', 'year', 'rating', 'info');
+              knex('Movies')
                 .select('*')
                 .then((updatedMovies) => {
                   updatedMovies.length.should.eql(lengthBeforeDelete - 1);
@@ -204,7 +200,7 @@ describe.skip('routes : movies', () => {
           res.status.should.equal(codes.NOT_FOUND);
           res.type.should.equal('application/json');
           res.body.status.should.eql(statuses(codes.NOT_FOUND));
-          res.body.message.should.eql(messages.notFound);
+          res.body.message.should.eql(statuses(codes.NOT_FOUND));
           done();
         });
     });

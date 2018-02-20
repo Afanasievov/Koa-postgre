@@ -7,28 +7,12 @@ const codes = require('http-status-codes');
 const movies = require('../fixtures/movies');
 
 const should = chai.should(); // eslint-disable-line no-unused-vars
+const statuses = codes.getStatusText;
 
 const base = 'http://localhost:1337';
 
 // Stubbing with sinon
-describe.skip('movie service', () => {
-  describe('when not stubbed', () => {
-    describe('GET /api/v1/movies', () => {
-      it('should return all movies', (done) => {
-        axios.get(`${base}/api/v1/movies`)
-          .then((res) => {
-            res.status.should.eql(codes.OK);
-            res.headers['content-type'].should.contain('application/json');
-            res.data.status.should.eql('success');
-            res.data.data.length.should.eql(3);
-            res.data.data[0].should.include.keys('id', 'name', 'genre', 'rating', 'explicit');
-            res.data.data[0].name.should.eql('The Land Before Time');
-            done();
-          });
-      });
-    });
-  });
-
+describe('movie service', () => {
   describe('when stubbed', () => {
     beforeEach(() => {
       this.get = sinon.stub(axios, 'get');
@@ -48,10 +32,14 @@ describe.skip('movie service', () => {
         axios.get(`${base}/api/v1/movies`, (res) => {
           res.status.should.eql(codes.OK);
           res.headers['content-type'].should.contain('application/json');
-          res.data.status.should.eql('success');
-          res.data.data.length.should.eql(3);
-          res.data.data[0].should.include.keys('id', 'name', 'genre', 'rating', 'explicit');
-          res.data.data[0].name.should.eql('The Land Before Time');
+          res.data.status.should.eql(statuses(codes.OK));
+          res.data.data.should.have.lengthOf.above(0);
+          res.data.data[0].should.include.keys(
+            'id', 'name', 'year', 'rating',
+            'countries', 'genres',
+          );
+          res.data.data[0].countries.should.have.lengthOf.above(0);
+          res.data.data[0].genres.should.have.lengthOf.above(0);
           done();
         });
       });
@@ -59,12 +47,18 @@ describe.skip('movie service', () => {
     describe('GET /api/v1/movies/:id', () => {
       it('should respond with a single movie', (done) => {
         this.get.yields(movies.single.success);
-        axios.get(`${base}/api/v1/movies/4`, (res) => {
+        axios.get(`${base}/api/v1/movies/1`, (res) => {
           res.status.should.equal(codes.OK);
           res.headers['content-type'].should.contain('application/json');
-          res.data.status.should.eql('success');
-          res.data.data[0].should.include.keys('id', 'name', 'genre', 'rating', 'explicit');
-          res.data.data[0].name.should.eql('The Land Before Time');
+          res.data.status.should.eql(statuses(codes.OK));
+          res.data.data.should.include.keys(
+            'id', 'name', 'year', 'rating',
+            'countries', 'genres',
+          );
+          res.data.data.countries.should.have.lengthOf.above(0);
+          res.data.data.genres.should.have.lengthOf.above(0);
+          res.data.data.persons.should.have.lengthOf.above(0);
+          res.data.data.persons[0].should.include.keys('id', 'fName', 'lName', 'nick', 'positions');
           done();
         });
       });
@@ -73,8 +67,8 @@ describe.skip('movie service', () => {
         axios.get(`${base}/api/v1/movies/999`, (res) => {
           res.status.should.equal(codes.NOT_FOUND);
           res.headers['content-type'].should.contain('application/json');
-          res.data.status.should.eql('error');
-          res.data.message.should.eql('That movie does not exist.');
+          res.data.status.should.eql(statuses(codes.NOT_FOUND));
+          res.data.message.should.eql(statuses(codes.NOT_FOUND));
           done();
         });
       });
@@ -84,16 +78,18 @@ describe.skip('movie service', () => {
         const url = `${base}/api/v1/movies`;
         const data = {
           name: 'Titanic',
-          genre: 'Drama',
-          rating: 8,
-          explicit: true,
+          year: 1997,
+          rating: 7.8,
         };
         this.post.yields(movies.add.success);
         axios.post(url, data, (res) => {
           res.status.should.equal(codes.CREATED);
           res.headers['content-type'].should.contain('application/json');
-          res.data.status.should.eql('success');
-          res.data.data[0].should.include.keys('id', 'name', 'genre', 'rating', 'explicit');
+          res.data.status.should.eql(statuses(codes.CREATED));
+          res.data.data.should.include.keys(
+            'id', 'name', 'rating', 'info',
+            'created_at', 'updated_at',
+          );
           done();
         });
       });
@@ -104,7 +100,7 @@ describe.skip('movie service', () => {
         axios.post(url, data, (res) => {
           res.status.should.equal(codes.BAD_REQUEST);
           res.headers['content-type'].should.contain('application/json');
-          res.data.status.should.eql('error');
+          res.data.status.should.eql(statuses(codes.BAD_REQUEST));
           should.exist(res.data.message);
           done();
         });
@@ -118,10 +114,10 @@ describe.skip('movie service', () => {
         axios.put(url, data, (res) => {
           res.status.should.equal(codes.OK);
           res.headers['content-type'].should.contain('application/json');
-          res.data.status.should.eql('success');
-          res.data.data[0].should.include.keys('id', 'name', 'genre', 'rating', 'explicit');
-          res.data.data[0].name.should.eql('Titanic');
-          res.data.data[0].rating.should.eql(9);
+          res.data.status.should.eql(statuses(codes.OK));
+          res.data.data.should.include.keys('id', 'name', 'year', 'rating', 'info');
+          res.data.data.name.should.eql('Titanic');
+          res.data.data.rating.should.eql(9);
           done();
         });
       });
@@ -132,7 +128,7 @@ describe.skip('movie service', () => {
         axios.put(url, data, (res) => {
           res.status.should.equal(codes.NOT_FOUND);
           res.headers['content-type'].should.contain('application/json');
-          res.data.status.should.eql('error');
+          res.data.status.should.eql(statuses(codes.NOT_FOUND));
           should.exist(res.data.message);
           done();
         });
@@ -146,9 +142,9 @@ describe.skip('movie service', () => {
         axios.delete(url, data, (res) => {
           res.status.should.equal(codes.OK);
           res.headers['content-type'].should.contain('application/json');
-          res.data.status.should.eql('success');
-          res.data.data[0].should.include.keys('id', 'name', 'genre', 'rating', 'explicit');
-          res.data.data[0].name.should.eql('Titanic');
+          res.data.status.should.eql(statuses(codes.OK));
+          res.data.data.should.include.keys('id', 'name', 'year', 'rating', 'info');
+          res.data.data.name.should.eql('Titanic');
           done();
         });
       });
@@ -159,7 +155,7 @@ describe.skip('movie service', () => {
         axios.delete(url, data, (res) => {
           res.status.should.equal(codes.NOT_FOUND);
           res.headers['content-type'].should.contain('application/json');
-          res.data.status.should.eql('error');
+          res.data.status.should.eql(statuses(codes.NOT_FOUND));
           should.exist(res.data.message);
           done();
         });

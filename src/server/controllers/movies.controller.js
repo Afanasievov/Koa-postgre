@@ -1,6 +1,5 @@
 const codes = require('http-status-codes');
 const queries = require('../../db/queries/movies');
-const messages = require('../config/messages');
 const mapMovies = require('../services/map_movies');
 
 const statuses = codes.getStatusText;
@@ -44,65 +43,44 @@ const addMovie = async (ctx) => {
     ctx.status = codes.CREATED;
     ctx.body = {
       status: statuses(codes.CREATED),
-      data: movie,
+      data: movie[0],
     };
-  } catch (error) {
-    ctx.status = codes.BAD_REQUEST;
-    ctx.body = {
-      status: statuses(codes.BAD_REQUEST),
-      message: error.message || messages.unexpected,
-      error,
-    };
+  } catch (err) {
+    ctx.throw(err);
   }
 };
 
 const updateMovie = async (ctx) => {
   try {
-    const movie = await queries.updateMovie(ctx.params.id, ctx.request.body);
-    if (movie.length) {
+    const movies = await queries.updateMovie(ctx.params.id, ctx.request.body);
+    if (movies.length) {
       ctx.status = codes.OK;
       ctx.body = {
         status: statuses(codes.OK),
-        data: movie,
+        data: movies[0],
       };
     } else {
-      ctx.status = codes.NOT_FOUND;
-      ctx.body = {
-        status: statuses(codes.NOT_FOUND),
-        message: messages.notFound,
-      };
+      ctx.throw(codes.NOT_FOUND);
     }
   } catch (err) {
-    ctx.status = codes.INTERNAL_SERVER_ERROR;
-    ctx.body = {
-      status: statuses(codes.INTERNAL_SERVER_ERROR),
-      message: err.message || messages.unexpected,
-    };
+    ctx.throw(err);
   }
 };
 
 const deleteMovie = async (ctx) => {
   try {
-    const movie = await queries.deleteMovie(ctx.params.id);
-    if (movie.length) {
+    const movies = await queries.deleteMovie(ctx.params.id);
+    if (movies.length) {
       ctx.status = codes.OK;
       ctx.body = {
         status: statuses(codes.OK),
-        data: movie,
+        data: movies[0],
       };
     } else {
-      ctx.status = codes.NOT_FOUND;
-      ctx.body = {
-        status: statuses(codes.NOT_FOUND),
-        message: messages.notFound,
-      };
+      ctx.throw(codes.NOT_FOUND);
     }
   } catch (err) {
-    ctx.status = codes.INTERNAL_SERVER_ERROR;
-    ctx.body = {
-      status: statuses(codes.INTERNAL_SERVER_ERROR),
-      message: err.message || messages.unexpected,
-    };
+    ctx.throw(err);
   }
 };
 

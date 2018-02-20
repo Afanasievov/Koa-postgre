@@ -12,10 +12,10 @@ const getMovies = () =>
       gId: 'Genres.id',
       gName: 'Genres.name',
     })
-    .innerJoin('MovieCountries', 'MovieCountries.id', 'Movies.id')
-    .innerJoin('Countries', 'Countries.id', 'MovieCountries.countryId')
-    .innerJoin('MovieGenres', 'MovieGenres.movieId', 'Movies.id')
-    .innerJoin('Genres', 'Genres.id', 'MovieGenres.genreId');
+    .leftOuterJoin('MovieCountries', 'MovieCountries.id', 'Movies.id')
+    .leftOuterJoin('Countries', 'Countries.id', 'MovieCountries.countryId')
+    .leftOuterJoin('MovieGenres', 'MovieGenres.movieId', 'Movies.id')
+    .leftOuterJoin('Genres', 'Genres.id', 'MovieGenres.genreId');
 
 const getSingleMovie = id =>
   knex('Movies')
@@ -39,35 +39,24 @@ const getSingleMovie = id =>
       chLName: 'Characters.lName',
       chNick: 'Characters.nick',
     })
-    .innerJoin('MovieCountries', 'MovieCountries.movieId', 'Movies.id')
-    .innerJoin('Countries', 'Countries.id', 'MovieCountries.countryId')
-    .innerJoin('MovieGenres', 'MovieGenres.movieId', 'Movies.id')
-    .innerJoin('Genres', 'Genres.id', 'MovieGenres.genreId')
+    .leftOuterJoin('MovieCountries', 'MovieCountries.movieId', 'Movies.id')
+    .leftOuterJoin('Countries', 'Countries.id', 'MovieCountries.countryId')
+    .leftOuterJoin('MovieGenres', 'MovieGenres.movieId', 'Movies.id')
+    .leftOuterJoin('Genres', 'Genres.id', 'MovieGenres.genreId')
     .leftOuterJoin('MoviePersons', 'MoviePersons.movieId', 'Movies.id')
     .leftOuterJoin('Persons', 'Persons.id', 'MoviePersons.personId')
     .leftOuterJoin('Positions', 'Positions.id', 'MoviePersons.positionId')
     .leftOuterJoin('Characters', 'Characters.id', 'MoviePersons.characterId')
     .where('Movies.id', id);
 
-const addMovie = (movie) => {
-  const countries = [];
-  const genres = [];
-  return knex.transaction(trx =>
-    trx
-      .insert(movie, 'id')
-      .into('Movies') // insert Movies
-      .then((id) => {
-        movie.countries.forEach(countryId => countries.push({ countryId, movieId: id }));
-        movie.genres.forEach(genreId => countries.push({ genreId, movieId: id }));
-
-        return trx.insert(countries).into('MovieCountries'); // insert movie-countries relations
-      })
-      .then(() => trx.insert(genres).into('MoviesGenres'))); // insert movie-genres relations
-};
-
-const updateMovie = (id, Movie) =>
+const addMovie = movie =>
   knex('Movies')
-    .update(Movie)
+    .insert(movie)
+    .returning('*');
+
+const updateMovie = (id, movie) =>
+  knex('Movies')
+    .update(movie)
     .where({
       id: parseInt(id, 10),
     })

@@ -1,6 +1,5 @@
 const codes = require('http-status-codes');
 const queries = require('../../db/queries/persons');
-const messages = require('../config/messages');
 const mapPersons = require('../services/map_persons');
 
 const statuses = codes.getStatusText;
@@ -46,13 +45,8 @@ const addPerson = async (ctx) => {
       status: statuses(codes.CREATED),
       data: movie,
     };
-  } catch (error) {
-    ctx.status = codes.BAD_REQUEST;
-    ctx.body = {
-      status: statuses(codes.BAD_REQUEST),
-      message: error.message || messages.unexpected,
-      error,
-    };
+  } catch (err) {
+    ctx.throw(err);
   }
 };
 
@@ -66,18 +60,10 @@ const updatePerson = async (ctx) => {
         data: movie,
       };
     } else {
-      ctx.status = codes.NOT_FOUND;
-      ctx.body = {
-        status: statuses(codes.NOT_FOUND),
-        message: messages.notFound,
-      };
+      ctx.throw(codes.NOT_FOUND);
     }
   } catch (err) {
-    ctx.status = codes.INTERNAL_SERVER_ERROR;
-    ctx.body = {
-      status: statuses(codes.INTERNAL_SERVER_ERROR),
-      message: err.message || messages.unexpected,
-    };
+    ctx.throw(err);
   }
 };
 
@@ -91,18 +77,10 @@ const deletePerson = async (ctx) => {
         data: movie,
       };
     } else {
-      ctx.status = codes.NOT_FOUND;
-      ctx.body = {
-        status: statuses(codes.NOT_FOUND),
-        message: messages.notFound,
-      };
+      ctx.throw(codes.NOT_FOUND);
     }
   } catch (err) {
-    ctx.status = codes.INTERNAL_SERVER_ERROR;
-    ctx.body = {
-      status: statuses(codes.INTERNAL_SERVER_ERROR),
-      message: err.message || messages.unexpected,
-    };
+    ctx.throw(err);
   }
 };
 
