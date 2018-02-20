@@ -33,7 +33,7 @@ describe('routes : movies', () => {
       .then(() => resolve(logger.info('Server is closed.')))
       .catch(err => reject(err))));
 
-  describe(`GET ${baseUrl}${paths.movies}`, () => {
+  describe(`GET ${baseUrl}`, () => {
     it('should return all movies', (done) => {
       chai
         .request(server)
@@ -79,7 +79,6 @@ describe('routes : movies', () => {
           should.exist(err);
           res.status.should.equal(codes.NOT_FOUND);
           res.type.should.equal('application/json');
-          res.body.status.should.eql(statuses(codes.NOT_FOUND));
           res.body.message.should.eql(statuses(codes.NOT_FOUND));
           done();
         });
@@ -116,7 +115,6 @@ describe('routes : movies', () => {
         .end((err, res) => {
           should.exist(err);
           res.type.should.equal('application/json');
-          should.exist(res.body.message);
           done();
         });
     });
@@ -158,8 +156,6 @@ describe('routes : movies', () => {
           should.exist(err);
           res.status.should.equal(codes.NOT_FOUND);
           res.type.should.equal('application/json');
-          res.body.status.should.eql(statuses(codes.NOT_FOUND));
-          res.body.message.should.eql(statuses(codes.NOT_FOUND));
           done();
         });
     });
@@ -199,8 +195,6 @@ describe('routes : movies', () => {
           should.exist(err);
           res.status.should.equal(codes.NOT_FOUND);
           res.type.should.equal('application/json');
-          res.body.status.should.eql(statuses(codes.NOT_FOUND));
-          res.body.message.should.eql(statuses(codes.NOT_FOUND));
           done();
         });
     });

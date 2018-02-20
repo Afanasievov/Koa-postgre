@@ -31,64 +31,18 @@ describe('routes : auth', () => {
       .then(() => server.close())
       .then(() => resolve(logger.info('Server is closed.')))
       .catch(err => reject(err))));
-  describe(`GET ${baseUrl}${paths.register}`, () => {
-    it('should render the register view', (done) => {
-      chai.request(server)
-        .get(`${baseUrl}${paths.register}`)
-        .end((err, res) => {
-          should.not.exist(err);
-          res.redirects.length.should.eql(0);
-          res.status.should.eql(codes.OK);
-          res.type.should.eql('text/html');
-          res.text.should.contain('<h1>Register</h1>');
-          res.text.should
-            .contain('<p><button type="submit">Register</button></p>');
-          done();
-        });
-    });
-  });
 
-  describe(`POST ${baseUrl}${paths.register}`, () => {
-    it('should register a new user', (done) => {
-      chai.request(server)
-        .post(`${baseUrl}${paths.register}`)
-        .send({
-          username: 'michael',
-          password: 'herman',
-        })
-        .end((err, res) => {
-          res.redirects[0].should.contain(`${baseUrl}${paths.status}`);
-          done();
-        });
-    });
-  });
-
-  describe(`GET ${baseUrl}${paths.login}`, () => {
-    it('should render the login view', (done) => {
-      chai.request(server)
-        .get(`${baseUrl}${paths.login}`)
-        .end((err, res) => {
-          should.not.exist(err);
-          res.redirects.length.should.eql(0);
-          res.status.should.eql(codes.OK);
-          res.type.should.eql('text/html');
-          res.text.should.contain('<h1>Login</h1>');
-          res.text.should
-            .contain('<p><button type="submit">Log In</button></p>');
-          done();
-        });
-    });
-  });
   describe(`POST ${baseUrl}${paths.login}`, () => {
     it('should login a user', (done) => {
-      chai.request(server)
+      chai
+        .request(server)
         .post(`${baseUrl}${paths.login}`)
-        .send({
-          username: 'jer',
-          password: 'johnson',
-        })
+        .send({ username: 'jer', password: 'johnson' })
         .end((err, res) => {
-          res.redirects[0].should.contain(`${baseUrl}${paths.status}`);
+          should.not.exist(err);
+          res.status.should.equal(codes.OK);
+          res.type.should.equal('application/json');
+          res.body.should.include.keys('id', 'username', 'fName', 'lName', 'email');
           done();
         });
     });

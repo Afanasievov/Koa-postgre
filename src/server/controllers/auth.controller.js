@@ -1,75 +1,54 @@
 const codes = require('http-status-codes');
 const passport = require('koa-passport');
 const queries = require('../../db/queries/users');
-const { versions, paths } = require('../config/routes');
-const auth = require('../services/auth');
 
 const statuses = codes.getStatusText;
-const baseUrl = `${paths.api}${versions.v1}${paths.auth}`;
-
-const getRegister = async (ctx) => {
-  ctx.type = 'html';
-  await ctx.render('register');
-};
 
 const postRegister = async (ctx) => {
   await queries.addUser(ctx.request.body);
 
   return passport.authenticate('local', (err, user) => {
     if (user) {
+      const result = Object.assign({}, user);
+
+      delete result.password;
       ctx.login(user);
-      ctx.redirect(`${baseUrl}${paths.status}`);
+      ctx.status = codes.OK;
+      ctx.body = result;
     } else {
       ctx.status = codes.BAD_REQUEST;
       ctx.body = { status: statuses(codes.BAD_REQUEST) };
     }
   })(ctx);
-};
-
-const getStatus = async (ctx) => {
-  if (auth.ensureAuthenticated(ctx)) {
-    ctx.type = 'html';
-    await ctx.render('status');
-  } else {
-    ctx.redirect(`${baseUrl}${paths.login}`);
-  }
-};
-
-const getLogin = async (ctx) => {
-  if (!auth.ensureAuthenticated(ctx)) {
-    ctx.type = 'html';
-    await ctx.render('login');
-  } else {
-    ctx.redirect(`${baseUrl}${paths.status}`);
-  }
 };
 
 const postLogin = async ctx =>
   passport.authenticate('local', (err, user) => {
     if (user) {
+      const result = Object.assign({}, user);
+
+      delete result.password;
       ctx.login(user);
-      ctx.redirect(`${baseUrl}${paths.status}`);
+      ctx.status = codes.OK;
+      ctx.body = result;
     } else {
-      ctx.status = codes.BAD_REQUEST;
-      ctx.body = { status: statuses(codes.BAD_REQUEST) };
+      ctx.status = codes.UNAUTHORIZED;
+      ctx.body = { status: statuses(codes.UNAUTHORIZED) };
     }
   })(ctx);
 
-const getLogout = async (ctx) => {
-  if (auth.ensureAuthenticated(ctx)) {
+const getLogout = (ctx) => {
+  try {
     ctx.logout();
-    ctx.redirect(`${baseUrl}${paths.login}`);
-  } else {
-    ctx.body = { success: false };
-    ctx.throw(codes.UNAUTHORIZED);
+    ctx.status = codes.OK;
+    ctx.body = { status: statuses(codes.OK) };
+  } catch (err) {
+    ctx.throw(err);
   }
 };
 
 module.exports = {
-  getRegister,
   postRegister,
-  getStatus,
-  getLogin,
   postLogin,
   getLogout,
 };
