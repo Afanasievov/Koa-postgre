@@ -11,7 +11,7 @@ const auth = require('../../src/server/middlewars/auth');
 const queries = require('../../src/db/queries/users');
 const logger = require('../../src/server/services/logger');
 const { port, host } = require('../../src/server/config/server.config');
-const { paths, versions } = require('../../src/server/config/routes');
+const { paths, versions } = require('../../src/server/config/routes.config');
 
 chai.use(chaiHttp);
 const should = chai.should();
@@ -114,7 +114,7 @@ describe('routes : auth - stubbed', () => {
           res.redirects.length.should.eql(0);
           res.status.should.eql(codes.UNAUTHORIZED);
           res.type.should.eql('application/json');
-          res.body.status.should.eql(statuses(codes.UNAUTHORIZED));
+          res.body.message.should.eql(statuses(codes.UNAUTHORIZED));
           done();
         });
     });

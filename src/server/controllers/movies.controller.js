@@ -10,7 +10,7 @@ const getAllMovies = async (ctx) => {
 
     movies = await mapMovies(movies);
     ctx.body = {
-      status: statuses(codes.OK),
+      message: statuses(codes.OK),
       data: movies,
     };
   } catch (err) {
@@ -25,7 +25,7 @@ const getSingleMovie = async (ctx) => {
     movie = await mapMovies(movie)[0];
     if (movie) {
       ctx.body = {
-        status: statuses(codes.OK),
+        message: statuses(codes.OK),
         data: movie,
       };
     } else {
@@ -42,7 +42,7 @@ const addMovie = async (ctx) => {
 
     ctx.status = codes.CREATED;
     ctx.body = {
-      status: statuses(codes.CREATED),
+      message: statuses(codes.CREATED),
       data: movie[0],
     };
   } catch (err) {
@@ -56,7 +56,7 @@ const updateMovie = async (ctx) => {
     if (movies.length) {
       ctx.status = codes.OK;
       ctx.body = {
-        status: statuses(codes.OK),
+        message: statuses(codes.OK),
         data: movies[0],
       };
     } else {
@@ -73,7 +73,7 @@ const deleteMovie = async (ctx) => {
     if (movies.length) {
       ctx.status = codes.OK;
       ctx.body = {
-        status: statuses(codes.OK),
+        message: statuses(codes.OK),
         data: movies[0],
       };
     } else {

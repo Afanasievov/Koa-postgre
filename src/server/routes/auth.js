@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-const { versions, paths } = require('../config/routes');
+const { versions, paths } = require('../config/routes.config');
 const auth = require('../middlewars/auth');
 const ctrl = require('../controllers/auth.controller');
 

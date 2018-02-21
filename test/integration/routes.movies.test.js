@@ -7,7 +7,7 @@ const app = require('../../src/server/');
 const logger = require('../../src/server/services/logger');
 const knex = require('../../src/db/connection');
 const { port, host } = require('../../src/server/config/server.config');
-const { paths, params, versions } = require('../../src/server/config/routes');
+const { paths, params, versions } = require('../../src/server/config/routes.config');
 
 chai.use(chaiHttp);
 const should = chai.should();
@@ -42,7 +42,7 @@ describe('routes : movies', () => {
           should.not.exist(err);
           res.status.should.equal(codes.OK);
           res.type.should.equal('application/json');
-          res.body.status.should.eql(statuses(codes.OK));
+          res.body.message.should.eql(statuses(codes.OK));
           res.body.data.should.have.lengthOf.above(0);
           res.body.data[0].should.include.keys(
             'id', 'name', 'year', 'rating',
@@ -62,7 +62,7 @@ describe('routes : movies', () => {
           should.not.exist(err);
           res.status.should.equal(codes.OK);
           res.type.should.equal('application/json');
-          res.body.status.should.eql(statuses(codes.OK));
+          res.body.message.should.eql(statuses(codes.OK));
           res.body.data.should.include.keys(
             'id', 'name', 'year', 'rating',
             'genres', 'countries', 'persons',
@@ -99,7 +99,7 @@ describe('routes : movies', () => {
           should.not.exist(err);
           res.status.should.equal(codes.CREATED);
           res.type.should.equal('application/json');
-          res.body.status.should.eql(statuses(codes.CREATED));
+          res.body.message.should.eql(statuses(codes.CREATED));
           res.body.data.should.include.keys('id', 'name', 'year', 'rating', 'info');
           done();
         });
@@ -136,7 +136,7 @@ describe('routes : movies', () => {
               should.not.exist(err);
               res.status.should.equal(codes.OK);
               res.type.should.equal('application/json');
-              res.body.status.should.eql(statuses(codes.OK));
+              res.body.message.should.eql(statuses(codes.OK));
               res.body.data.should.include.keys('id', 'name', 'year', 'rating', 'info');
               const newMovieObject = res.body.data;
               newMovieObject.rating.should.not.eql(movieObject.rating);
@@ -175,7 +175,7 @@ describe('routes : movies', () => {
               should.not.exist(err);
               res.status.should.equal(codes.OK);
               res.type.should.equal('application/json');
-              res.body.status.should.eql(statuses(codes.OK));
+              res.body.message.should.eql(statuses(codes.OK));
               res.body.data.should.include.keys('id', 'name', 'year', 'rating', 'info');
               knex('Movies')
                 .select('*')
