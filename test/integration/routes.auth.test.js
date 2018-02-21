@@ -15,6 +15,7 @@ const should = chai.should();
 const statuses = codes.getStatusText;
 const baseUrl = `${paths.api}${versions.v1}${paths.auth}`;
 let server;
+let agent;
 
 describe('routes : auth', () => {
   before(() => new Promise((resolve, reject) =>
@@ -24,6 +25,7 @@ describe('routes : auth', () => {
       .then(() => {
         server = app.listen(port, host, () =>
           logger.info(`Server is listening on ${host}:${port}.`));
+        agent = chai.request.agent(server);
       })
       .then(() => resolve())
       .catch(err => reject(err))));
@@ -137,6 +139,39 @@ describe('routes : auth', () => {
         .request(server)
         .post(`${baseUrl}${paths.login}`)
         .send({ username, password: 'wrong' })
+        .end((err, res) => {
+          res.status.should.eql(codes.UNAUTHORIZED);
+          res.type.should.eql('application/json');
+          res.body.message.should.eql(statuses(codes.UNAUTHORIZED));
+          done();
+        });
+    });
+  });
+  describe(`GET ${baseUrl}${paths.logout}`, () => {
+    const username = 'jer';
+    const password = 'johnson';
+
+    it('should logout a user', (done) => {
+      agent
+        .post(`${baseUrl}${paths.login}`)
+        .send({ username, password })
+        .end((err, res) => {
+          should.not.exist(err);
+          res.should.have.cookie('koa:sess');
+          res.should.have.cookie('koa:sess.sig');
+
+          return agent
+            .get(`${baseUrl}${paths.logout}`)
+            .then((resLogout) => {
+              resLogout.status.should.eql(codes.OK);
+              done();
+            });
+        });
+    });
+    it('should respond with 401 error in case of user doesn\'t have cookies', (done) => {
+      chai
+        .request(server)
+        .get(`${baseUrl}${paths.logout}`)
         .end((err, res) => {
           res.status.should.eql(codes.UNAUTHORIZED);
           res.type.should.eql('application/json');
